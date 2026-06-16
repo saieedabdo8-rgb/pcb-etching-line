@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated PCB Chemical Etching Production Line</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #0f1f3d 25%, #132a4a 50%, #0f1f3d 75%, #0a1628 100%);
+            color: #e0e8f0;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 0%, rgba(6, 182, 212, 0.04) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(10, 22, 40, 0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.15);
+            transition: all 0.3s;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 22, 40, 0.98);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+
+        .nav-logo .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #06b6d4, #38bdf8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #06b6d4;
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .hamburger span {
+            width: 26px;
+            height: 2px;
+            background: #e0e8f0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 6rem 2rem 4rem;
+            overflow: hidden;
+        }
+
+        .hero-bg-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(6, 182, 212, 0.12);
+            color: #06b6d4;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: #06b6d4;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 0.75rem;
+            letter-spacing: -1.5px;
+            animation: fadeInUp 0.8s ease 0.1s both;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #06b6d4, #38bdf8, #7dd3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero .chapter-info {
+            font-size: 0.95rem;
+            color: #64748b;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+
+        .hero .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem;
+            margin-top: 2rem;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .hero .tech-stack span {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(6, 182, 212, 0.15);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: #7dd3fc;
+            font-weight: 500;
+        }
+
+        .hero-cta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2.5rem;
+            animation: fadeInUp 0.8s ease 0.5s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #06b6d4;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-outline:hover {
+            background: rgba(6, 182, 212, 0.1);
+            border-color: #06b6d4;
+            transform: translateY(-2px);
+        }
+
+        /* ===== SECTIONS ===== */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 900;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 1.05rem;
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-title-underline {
+            width: 70px;
+            height: 3px;
+            background: linear-gradient(90deg, #06b6d4, #38bdf8);
+            margin: 0.8rem auto 0;
+            border-radius: 2px;
+        }
+
+        /* ===== ABOUT ===== */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-image {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(6, 182, 212, 0.15);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .about-text h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #06b6d4;
+            margin-bottom: 1rem;
+        }
+
+        .about-text p {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .about-text .highlights {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .about-text .highlight-item {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .about-text .highlight-item .check {
+            width: 24px;
+            height: 24px;
+            background: rgba(6, 182, 212, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #06b6d4;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        /* ===== SYSTEM OVERVIEW ===== */
+        .system-overview {
+            background: rgba(6, 182, 212, 0.03);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(6, 182, 212, 0.1);
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .overview-card {
+            background: linear-gradient(135deg, rgba(15, 31, 61, 0.8), rgba(10, 22, 40, 0.8));
+            border: 1px solid rgba(6, 182, 212, 0.1);
+            border-radius: 16px;
+            padding: 1.8rem;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(6, 182, 212, 0.3);
+            box-shadow: 0 12px 40px rgba(6, 182, 212, 0.1);
+        }
+
+        .overview-card .icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(56, 189, 248, 0.1));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .overview-card h4 {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .overview-card p {
+            color: #94a3b8;
+            font-size: 0.88rem;
+        }
+
+        .overview-card .stat {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #06b6d4;
+            margin-bottom: 0.3rem;
+        }
+
+        /* ===== HARDWARE ===== */
+        .hardware-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .hardware-card {
+            background: linear-gradient(135deg, rgba(15, 31, 61, 0.8), rgba(10, 22, 40, 0.8));
+            border: 1px solid rgba(6, 182, 212, 0.1);
+            border-radius: 16px;
+            padding: 1.8rem;
+            transition: all 0.4s ease;
+        }
+
+        .hardware-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(6, 182, 212, 0.3);
+            box-shadow: 0 12px 40px rgba(6, 182, 212, 0.1);
+        }
+
+        .hardware-card .h-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(56, 189, 248, 0.1));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hardware-card h4 {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .hardware-card p {
+            color: #94a3b8;
+            font-size: 0.88rem;
+        }
+
+        .hardware-card .specs {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .hardware-card .specs span {
+            display: block;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        .hardware-card .specs strong {
+            color: #7dd3fc;
+        }
+
+        /* ===== SOFTWARE ===== */
+        .software-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .software-text h3 {
+            color: #06b6d4;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .software-text p {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+        .software-text ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .software-text ul li {
+            padding: 0.6rem 0;
+            padding-left: 1.8rem;
+            position: relative;
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .software-text ul li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: #06b6d4;
+            font-weight: 700;
+        }
+
+        /* ===== WORKFLOW DIAGRAM ===== */
+        .workflow-diagram {
+            background: linear-gradient(135deg, rgba(15, 31, 61, 0.9), rgba(10, 22, 40, 0.9));
+            border: 1px solid rgba(6, 182, 212, 0.15);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 0.8rem 0;
+            position: relative;
+        }
+
+        .workflow-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 60px;
+            bottom: -10px;
+            width: 2px;
+            background: linear-gradient(to bottom, #06b6d4, transparent);
+        }
+
+        .workflow-step .step-num {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(56, 189, 248, 0.1));
+            border: 2px solid rgba(6, 182, 212, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: #06b6d4;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .workflow-step .step-info h4 {
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .workflow-step .step-info p {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        /* ===== GALLERY ===== */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(6, 182, 212, 0.1);
+            background: rgba(15, 31, 61, 0.8);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            aspect-ratio: 16/10;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            border-color: rgba(6, 182, 212, 0.3);
+            box-shadow: 0 12px 40px rgba(6, 182, 212, 0.15);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-item .g-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            background: linear-gradient(transparent, rgba(10, 22, 40, 0.95));
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover .g-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-item .g-overlay h4 {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .gallery-item .g-overlay p {
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+
+        /* ===== RESULTS ===== */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, rgba(15, 31, 61, 0.8), rgba(10, 22, 40, 0.8));
+            border: 1px solid rgba(6, 182, 212, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+
+        .result-card .r-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #06b6d4, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-card .r-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        /* ===== CONTACT ===== */
+        .contact-content {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(15, 31, 61, 0.8), rgba(10, 22, 40, 0.8));
+            border: 1px solid rgba(6, 182, 212, 0.15);
+            border-radius: 20px;
+            padding: 3rem;
+        }
+
+        .contact-content .c-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(56, 189, 248, 0.1));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .contact-content h3 {
+            font-size: 1.5rem;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-content p {
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-content a {
+            color: #06b6d4;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-content a:hover {
+            color: #38bdf8;
+        }
+
+        .contact-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .contact-info-item {
+            text-align: center;
+        }
+
+        .contact-info-item .ci-label {
+            color: #64748b;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .contact-info-item .ci-value {
+            color: #e0e8f0;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(6, 182, 212, 0.1);
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .lightbox .close-lb {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .lightbox .close-lb:hover {
+            opacity: 1;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .software-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 22, 40, 0.98);
+                flex-direction: column;
+                padding: 1rem;
+                border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            section {
+                padding: 3rem 1.2rem;
+            }
+
+            .system-overview {
+                padding: 1.5rem;
+            }
+
+            .workflow-diagram {
+                padding: 1.5rem;
+            }
+
+            .about-text .highlights {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero {
+                padding: 5rem 1.2rem 3rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .contact-content a {
+                font-size: 1.1rem;
+                word-break: break-all;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-inner {
+                padding: 0 1rem;
+            }
+
+            .hardware-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-step .step-num {
+                width: 44px;
+                height: 44px;
+                font-size: 0.9rem;
+            }
+
+            .workflow-step:not(:last-child)::after {
+                left: 22px;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <div class="logo-icon">PCB</div>
+                <span>PCB Line</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#overview">Overview</a>
+                <a href="#hardware">Hardware</a>
+                <a href="#software">Software</a>
+                <a href="#workflow">Workflow</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#results">Results</a>
+                <a href="#contact">Contact</a>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="home">
+        <svg class="hero-bg-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="pcb-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#06b6d4" stroke-width="0.5" opacity="0.15"/>
+                </pattern>
+                <pattern id="pcb-grid-sm" width="15" height="15" patternUnits="userSpaceOnUse">
+                    <path d="M 15 0 L 0 0 0 15" fill="none" stroke="#06b6d4" stroke-width="0.3" opacity="0.08"/>
+                </pattern>
+                <radialGradient id="glow1" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.12"/>
+                    <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="glow2" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.08"/>
+                    <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+                </radialGradient>
+                <filter id="blur1"><feGaussianBlur stdDeviation="2"/></filter>
+                <filter id="blur2"><feGaussianBlur stdDeviation="4"/></filter>
+            </defs>
+            <rect width="1600" height="900" fill="transparent"/>
+            <rect width="1600" height="900" fill="url(#pcb-grid)"/>
+            <rect width="1600" height="900" fill="url(#pcb-grid-sm)"/>
+            <circle cx="800" cy="450" r="400" fill="url(#glow1)"/>
+            <circle cx="250" cy="250" r="300" fill="url(#glow2)"/>
+            <circle cx="1350" cy="650" r="300" fill="url(#glow1)"/>
+            <!-- PCB traces -->
+            <g stroke="#06b6d4" fill="none" opacity="0.12">
+                <path d="M0 100 Q 150 80, 300 150 T 600 180 T 900 140 T 1200 200 T 1600 160"/>
+                <path d="M0 800 Q 200 830, 400 780 T 800 820 T 1200 770 T 1600 810"/>
+            </g>
+            <g stroke="#7dd3fc" fill="none" opacity="0.08" filter="url(#blur1)">
+                <path d="M0 250 Q 250 200, 500 300 T 1000 280 T 1600 350"/>
+                <path d="M0 650 Q 300 700, 600 620 T 1100 680 T 1600 600"/>
+            </g>
+            <!-- PCB via holes -->
+            <g fill="none" opacity="0.15">
+                <circle cx="200" cy="180" r="12" stroke="#06b6d4" stroke-width="1"/>
+                <circle cx="200" cy="180" r="6" stroke="#06b6d4" stroke-width="0.8"/>
+                <circle cx="500" cy="220" r="12" stroke="#06b6d4" stroke-width="1"/>
+                <circle cx="500" cy="220" r="6" stroke="#06b6d4" stroke-width="0.8"/>
+                <circle cx="800" cy="160" r="12" stroke="#06b6d4" stroke-width="1"/>
+                <circle cx="800" cy="160" r="6" stroke="#06b6d4" stroke-width="0.8"/>
+                <circle cx="1100" cy="240" r="12" stroke="#06b6d4" stroke-width="1"/>
+                <circle cx="1100" cy="240" r="6" stroke="#06b6d4" stroke-width="0.8"/>
+                <circle cx="1400" cy="180" r="12" stroke="#06b6d4" stroke-width="1"/>
+                <circle cx="1400" cy="180" r="6" stroke="#06b6d4" stroke-width="0.8"/>
+            </g>
+            <!-- IC chip shapes -->
+            <g fill="none" opacity="0.08">
+                <rect x="600" y="500" width="120" height="80" rx="6" stroke="#06b6d4" stroke-width="1.5"/>
+                <rect x="610" y="510" width="30" height="20" rx="2" stroke="#06b6d4" stroke-width="0.8"/>
+                <rect x="650" y="510" width="30" height="20" rx="2" stroke="#06b6d4" stroke-width="0.8"/>
+                <rect x="690" y="510" width="20" height="20" rx="2" stroke="#06b6d4" stroke-width="0.8"/>
+                <line x1="660" y1="580" x2="660" y2="620" stroke="#06b6d4" stroke-width="0.8"/>
+                <line x1="700" y1="580" x2="700" y2="620" stroke="#06b6d4" stroke-width="0.8"/>
+            </g>
+            <g fill="none" opacity="0.06">
+                <rect x="1000" y="450" width="80" height="60" rx="4" stroke="#38bdf8" stroke-width="1.5"/>
+                <circle cx="1020" cy="480" r="5" stroke="#38bdf8" stroke-width="1"/>
+                <circle cx="1060" cy="480" r="5" stroke="#38bdf8" stroke-width="1"/>
+            </g>
+            <!-- Circuit node connections -->
+            <g stroke="#06b6d4" fill="none" opacity="0.1">
+                <path d="M300 600 L300 550 L380 550 L380 480 L460 480" stroke-width="1"/>
+                <circle cx="300" cy="600" r="5" fill="#06b6d4"/>
+                <circle cx="460" cy="480" r="5" fill="#06b6d4"/>
+                <path d="M1200 700 L1200 630 L1280 630 L1280 560 L1360 560" stroke-width="1"/>
+                <circle cx="1200" cy="700" r="5" fill="#06b6d4"/>
+                <circle cx="1360" cy="560" r="5" fill="#06b6d4"/>
+            </g>
+            <!-- CNC toolpath patterns -->
+            <g stroke="#7dd3fc" fill="none" opacity="0.06">
+                <path d="M100 350 L 100 450 L 200 450 L 200 350 Z" stroke-width="0.8"/>
+                <path d="M120 370 L 120 430 L 180 430 L 180 370 Z" stroke-width="0.6"/>
+                <path d="M140 390 L 140 410 L 160 410 L 160 390 Z" stroke-width="0.4"/>
+                <path d="M1300 300 L 1300 400 L 1450 400 L 1450 300 Z" stroke-width="0.8"/>
+                <path d="M1320 320 L 1320 380 L 1430 380 L 1430 320 Z" stroke-width="0.6"/>
+                <path d="M1350 340 L 1350 360 L 1400 360 L 1400 340 Z" stroke-width="0.4"/>
+            </g>
+            <!-- Spray nozzle icon -->
+            <g fill="none" opacity="0.1">
+                <path d="M50 700 L50 650 Q50 630 70 630 L100 630 Q120 630 120 650 L120 700" stroke="#06b6d4" stroke-width="1.5"/>
+                <line x1="60" y1="700" x2="60" y2="730" stroke="#06b6d4" stroke-width="1"/>
+                <line x1="80" y1="700" x2="80" y2="740" stroke="#06b6d4" stroke-width="1"/>
+                <line x1="100" y1="700" x2="100" y2="730" stroke="#06b6d4" stroke-width="1"/>
+                <line x1="110" y1="700" x2="110" y2="720" stroke="#06b6d4" stroke-width="1"/>
+                <circle cx="85" cy="620" r="15" stroke="#06b6d4" stroke-width="1"/>
+            </g>
+        </svg>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                Automated PCB Production Line
+            </div>
+            <h1>Automated <span>PCB Chemical Etching</span> Production Line</h1>
+            <p class="subtitle">A Fully Automated System for High-Precision PCB Manufacturing Using Arduino UNO, GRBL, and CNC Technology</p>
+            <p class="chapter-info">Chapter 6 — Software Implementation | Graduation Project</p>
+            <div class="tech-stack">
+                <span>Arduino UNO</span>
+                <span>GRBL v1.1h</span>
+                <span>CNC Shield V3</span>
+                <span>A4988 Drivers</span>
+                <span>Stepper Motors</span>
+                <span>G-Code</span>
+            </div>
+            <div class="hero-cta">
+                <a href="#about" class="btn btn-primary">Explore Project</a>
+                <a href="#gallery" class="btn btn-outline">View Gallery</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section id="about">
+        <h2 class="section-title">About the Project</h2>
+        <div class="section-title-underline"></div>
+        <p class="section-subtitle">An automated system based on Arduino UNO microcontroller to guide a chemical spray head along a programmed path for PCB etching with high precision and low cost.</p>
+        <div class="about-grid">
+            <div class="about-image">
+                <img src="Pasted image.png" alt="PCB Production System Overview">
+            </div>
+            <div class="about-text">
+                <h3>Project Overview</h3>
+                <p>This graduation project presents the design and implementation of a fully automated PCB Chemical Etching Production Line. The system integrates an Arduino UNO microcontroller running GRBL firmware to precisely control stepper motors via a CNC Shield V3 and A4988 drivers, guiding a chemical spray head along programmed G-code paths.</p>
+                <p>The system replaces traditional manual etching methods with an automated, precise, and cost-effective solution suitable for educational institutions, research labs, and small-scale PCB manufacturing.</p>
+                <div class="highlights">
+                    <div class="highlight-item">
+                        <div class="check">&#10003;</div>
+                        High Precision Etching
+                    </div>
+                    <div class="highlight-item">
+                        <div class="check">&#10003;</div>
+                        Low Cost Solution
+                    </div>
+                    <div class="highlight-item">
+                        <div class="check">&#10003;</div>
+                        Automated Workflow
+                    </div>
+                    <div class="highlight-item">
+                        <div class="check">&#10003;</div>
+                        Open Source Firmware
+                    </div>
+                    <div class="highlight-item">
+                        <div class="check">&#10003;</div>
+                        Educational Platform
+                    </div>
+                    <div class="highlight-item">
+                        <div class="check">&#10003;</div>
+                        Scalable Design
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SYSTEM OVERVIEW ===== -->
+    <section id="overview">
+        <h2 class="section-title">System Overview</h2>
+        <div class="section-title-underline"></div>
+        <p class="section-subtitle">Key technical specifications and performance metrics of the automated PCB etching system.</p>
+        <div class="system-overview">
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="icon">&#9881;</div>
+                    <div class="stat">160</div>
+                    <h4>Steps/mm</h4>
+                    <p>Resolution for X/Y/Z axes motion control system</p>
+                </div>
+                <div class="overview-card">
+                    <div class="icon">&#9654;</div>
+                    <div class="stat">1500</div>
+                    <h4>Max Speed</h4>
+                    <p>mm/min maximum traverse speed on X and Y axes</p>
+                </div>
+                <div class="overview-card">
+                    <div class="icon">&#8597;</div>
+                    <div class="stat">0.000625</div>
+                    <h4>mm/step</h4>
+                    <p>Theoretical resolution of the motion control system</p>
+                </div>
+                <div class="overview-card">
+                    <div class="icon">&#9733;</div>
+                    <div class="stat">ATmega328P</div>
+                    <h4>Main Controller</h4>
+                    <p>Arduino UNO with 16 MHz clock speed</p>
+                </div>
+                <div class="overview-card">
+                    <div class="icon">&#9889;</div>
+                    <div class="stat">GRBL v1.1h</div>
+                    <h4>Firmware</h4>
+                    <p>High-performance motion control firmware</p>
+                </div>
+                <div class="overview-card">
+                    <div class="icon">&#128200;</div>
+                    <div class="stat">G-Code</div>
+                    <h4>Programming</h4>
+                    <p>Industry-standard CNC programming language</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== HARDWARE ===== -->
+    <section id="hardware">
+        <h2 class="section-title">Hardware Components</h2>
+        <div class="section-title-underline"></div>
+        <p class="section-subtitle">Detailed breakdown of all hardware components used in the automated PCB etching system.</p>
+        <div class="hardware-grid">
+            <div class="hardware-card">
+                <div class="h-icon">&#9733;</div>
+                <h4>Arduino UNO</h4>
+                <p>Main microcontroller board based on the ATmega328P. Provides 14 digital I/O pins, 6 analog inputs, and runs at 16 MHz clock speed.</p>
+                <div class="specs">
+                    <span><strong>MCU:</strong> ATmega328P</span>
+                    <span><strong>Clock:</strong> 16 MHz</span>
+                    <span><strong>Flash:</strong> 32 KB</span>
+                </div>
+            </div>
+            <div class="hardware-card">
+                <div class="h-icon">&#9881;</div>
+                <h4>CNC Shield V3</h4>
+                <p>Arduino-compatible expansion board for CNC motion control. Provides connections for up to 4 stepper motor drivers with dedicated step/direction pins.</p>
+                <div class="specs">
+                    <span><strong>Axes:</strong> 3 (X, Y, Z)</span>
+                    <span><strong>Compatibility:</strong> GRBL</span>
+                    <span><strong>Input:</strong> 12-36V</span>
+                </div>
+            </div>
+            <div class="hardware-card">
+                <div class="h-icon">&#9889;</div>
+                <h4>A4988 Stepper Driver</h4>
+                <p>Microstepping bipolar stepper motor driver with built-in translator for easy operation. Supports up to 1/16 microstepping and 2A current per coil.</p>
+                <div class="specs">
+                    <span><strong>Microstep:</strong> 1/16</span>
+                    <span><strong>Current:</strong> 2A max</span>
+                    <span><strong>Voltage:</strong> 8-35V</span>
+                </div>
+            </div>
+            <div class="hardware-card">
+                <div class="h-icon">&#8635;</div>
+                <h4>Stepper Motors</h4>
+                <p>NEMA 17 bipolar stepper motors providing precise rotational motion converted to linear movement via lead screws and timing belts.</p>
+                <div class="specs">
+                    <span><strong>Type:</strong> NEMA 17</span>
+                    <span><strong>Torque:</strong> 0.45 Nm</span>
+                    <span><strong>Step Angle:</strong> 1.8&deg;</span>
+                </div>
+            </div>
+            <div class="hardware-card">
+                <div class="h-icon">&#9973;</div>
+                <h4>Chemical Spray Head</h4>
+                <p>Precision spray nozzle system controlled via solenoid valve. Distributes etchant solution uniformly across the PCB surface.</p>
+                <div class="specs">
+                    <span><strong>Control:</strong> Solenoid Valve</span>
+                    <span><strong>Material:</strong> Chemical Resistant</span>
+                    <span><strong>Coverage:</strong> Adjustable</span>
+                </div>
+            </div>
+            <div class="hardware-card">
+                <div class="h-icon">&#9888;</div>
+                <h4>Limit Sensors</h4>
+                <p>Mechanical end-stop switches for homing and limit protection. Ensures safe operation by preventing over-travel of the motion system.</p>
+                <div class="specs">
+                    <span><strong>Type:</strong> Mechanical</span>
+                    <span><strong>Function:</strong> Homing + Limits</span>
+                    <span><strong>Interface:</strong> Digital I/O</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SOFTWARE ===== -->
+    <section id="software">
+        <h2 class="section-title">Software Implementation</h2>
+        <div class="section-title-underline"></div>
+        <p class="section-subtitle">The software architecture combines GRBL firmware for real-time motion control with custom G-code programming for precise PCB etching.</p>
+        <div class="software-content">
+            <div class="software-text">
+                <h3>GRBL Firmware</h3>
+                <p>GRBL is an open-source, high-performance motion control firmware for Arduino that implements the industry-standard G-code language. It runs directly on the Arduino UNO, providing real-time control of stepper motors with optimized acceleration and jerk management.</p>
+                <ul>
+                    <li>G-code interpreter and parser</li>
+                    <li>Real-time motion planning with look-ahead</li>
+                    <li>Acceleration and jerk control</li>
+                    <li>Software-based PWM for spindle/speed control</li>
+                    <li>Error handling and status reporting</li>
+                    <li>Serial communication via USB (115200 baud)</li>
+                </ul>
+            </div>
+            <div class="software-text">
+                <h3>G-Code Programming</h3>
+                <p>Custom G-code programs are generated to define the precise toolpath for the chemical spray head. The motion patterns ensure complete and uniform coverage of the PCB surface during the etching process.</p>
+                <ul>
+                    <li>G00/G01: Rapid positioning and linear interpolation</li>
+                    <li>G02/G03: Circular/helical interpolation for curved paths</param>
+                    <li>G17/G18/G19: Plane selection for 2D operations</li>
+                    <li>M03/M05: Spray control (on/off)</li>
+                    <li>G90/G91: Absolute and incremental positioning</li>
+                    <li>Custom etch patterns optimized for chemical exposure</li>
+                </ul>
+            </div>
+        </div>
+        <div style="margin-top:2rem;">
+            <div class="about-image" style="width:100%;">
+                <img src="Pasted%20image%20(2).png" alt="Software Architecture Diagram" style="width:100%;">
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== WORKFLOW ===== -->
+    <section id="workflow">
+        <h2 class="section-title">System Workflow</h2>
+        <div class="section-title-underline"></div>
+        <p class="section-subtitle">Complete data flow and process chain from design input to finished PCB.</p>
+        <div class="workflow-diagram">
+            <div class="workflow-step">
+                <div class="step-num">01</div>
+                <div class="step-info">
+                    <h4>G-Code Generation</h4>
+                    <p>CAD/CAM software generates optimized G-code toolpath for PCB etching pattern</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">02</div>
+                <div class="step-info">
+                    <h4>Arduino UNO</h4>
+                    <p>Microcontroller receives G-code commands via USB serial communication at 115200 baud</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">03</div>
+                <div class="step-info">
+                    <h4>GRBL Firmware</h4>
+                    <p>Real-time G-code interpreter processes commands and plans motion with look-ahead</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">04</div>
+                <div class="step-info">
+                    <h4>CNC Shield V3</h4>
+                    <p>Routes step/direction signals to individual stepper driver channels for X, Y, Z axes</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">05</div>
+                <div class="step-info">
+                    <h4>A4988 Drivers</h4>
+                    <p>Microstepping drivers convert digital pulses into precise motor coil currents (1/16 stepping)</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">06</div>
+                <div class="step-info">
+                    <h4>Stepper Motors</h4>
+                    <p>NEMA 17 motors rotate precisely, driving lead screws and timing belts for XY motion</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">07</div>
+                <div class="step-info">
+                    <h4>Motion Control System</h4>
+                    <p>Gantry system positions the spray head accurately over the PCB substrate</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">08</div>
+                <div class="step-info">
+                    <h4>Chemical Spray Head</h4>
+                    <p>Solenoid-controlled nozzle sprays etchant solution precisely along programmed path</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">09</div>
+                <div class="step-info">
+                    <h4>PCB Chemical Etching</h4>
+                    <p>Controlled chemical reaction removes unwanted copper, producing the final PCB</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== GALLERY ===== -->
+    <section id="gallery">
+        <h2 class="section-title">Project Gallery</h2>
+        <div class="section-title-underline"></div>
+        <p class="section-subtitle">Visual documentation of the system design, hardware setup, and implementation process.</p>
+        <div class="gallery-grid">
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <img src="Pasted image.png" alt="PCB System Architecture">
+                <div class="g-overlay">
+                    <h4>System Architecture Overview</h4>
+                    <p>Complete system architecture and component layout diagram</p>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <img src="Pasted%20image%20(2).png" alt="Software Architecture">
+                <div class="g-overlay">
+                    <h4>Software Architecture Diagram</h4>
+                    <p>GRBL firmware and G-code programming implementation details</p>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <img src="Pasted%20image%20(3).png" alt="Hardware Integration">
+                <div class="g-overlay">
+                    <h4>Hardware Integration</h4>
+                    <p>Arduino UNO, CNC Shield V3, and A4988 driver configuration</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== LIGHTBOX ===== -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="close-lb" onclick="closeLightbox()">&times;</button>
+        <img id="lightboxImg" src="" alt="">
+    </div>
+
+    <!-- ===== RESULTS ===== -->
+    <section id="results">
+        <h2 class="section-title">Results &amp; Achievements</h2>
+        <div class="section-title-underline"></div>
+        <p class="section-subtitle">Performance metrics and outcomes achieved by the automated PCB chemical etching system.</p>
+        <div class="results-grid">
+            <div class="result-card">
+                <div class="r-value">&plusmn;0.1</div>
+                <div class="r-label">Positioning Accuracy (mm)</div>
+            </div>
+            <div class="result-card">
+                <div class="r-value">2-5</div>
+                <div class="r-label">Etching Time per Board (min)</div>
+            </div>
+            <div class="result-card">
+                <div class="r-value">&gt;95%</div>
+                <div class="r-label">Etching Uniformity</div>
+            </div>
+            <div class="result-card">
+                <div class="r-value">200&times;200</div>
+                <div class="r-label">Max PCB Size (mm)</div>
+            </div>
+            <div class="result-card">
+                <div class="r-value">&lt;60</div>
+                <div class="r-label">Noise Level (dB)</div>
+            </div>
+            <div class="result-card">
+                <div class="r-value">12V</div>
+                <div class="r-label">System Power Supply</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section id="contact">
+        <h2 class="section-title">Contact Us</h2>
+        <div class="section-title-underline"></div>
+        <p class="section-subtitle">Get in touch with the project team for inquiries, collaboration, or further information.</p>
+        <div class="contact-content">
+            <div class="c-icon">&#9993;</div>
+            <h3>Project Contact</h3>
+            <p>For academic inquiries, collaboration opportunities, or technical questions:</p>
+            <a href="mailto:saieedabdo8@gmail.com">saieedabdo8@gmail.com</a>
+            <div class="contact-info-grid">
+                <div class="contact-info-item">
+                    <div class="ci-label">Project Type</div>
+                    <div class="ci-value">Graduation Project</div>
+                </div>
+                <div class="contact-info-item">
+                    <div class="ci-label">Department</div>
+                    <div class="ci-value">Mechatronics Engineering</div>
+                </div>
+                <div class="contact-info-item">
+                    <div class="ci-label">Status</div>
+                    <div class="ci-value">Completed</div>
+                </div>
+                <div class="contact-info-item">
+                    <div class="ci-label">Year</div>
+                    <div class="ci-value">2026</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <p>Automated PCB Chemical Etching Production Line &copy; 2026 &mdash; All rights reserved to the project team</p>
+    </footer>
+
+    <script>
+        // ===== NAVBAR =====
+        const navbar = document.getElementById('navbar');
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // ===== SCROLL REVEAL =====
+        const revealElements = document.querySelectorAll('.overview-card, .hardware-card, .result-card, .gallery-item, .workflow-step, .about-grid');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.overview-card, .hardware-card, .result-card, .gallery-item, .workflow-step').forEach(el => {
+            el.classList.add('reveal');
+            revealObserver.observe(el);
+        });
+
+        document.querySelector('.about-grid')?.classList.add('reveal');
+        revealObserver.observe(document.querySelector('.about-grid'));
+
+        // ===== LIGHTBOX =====
+        function openLightbox(item) {
+            const img = item.querySelector('img');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            lightboxImg.src = img.src;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        console.log('PCB Chemical Etching Production Line - Website Loaded');
+    </script>
+</body>
+</html>
