@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automated PCB Chemical Etching Production Line</title>
+    <title>PCB Production Line</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -675,6 +675,54 @@
             border-color: rgba(6, 182, 212, 0.3);
         }
 
+        /* ===== TEAM ===== */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .team-card {
+            background: linear-gradient(135deg, rgba(15, 31, 61, 0.8), rgba(10, 22, 40, 0.8));
+            border: 1px solid rgba(6, 182, 212, 0.1);
+            border-radius: 14px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(6, 182, 212, 0.3);
+            box-shadow: 0 12px 40px rgba(6, 182, 212, 0.1);
+        }
+
+        .team-card .t-icon {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #06b6d4, #38bdf8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .team-card h4 {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .team-card p {
+            color: #94a3b8;
+            font-size: 0.82rem;
+        }
+
         .result-card .r-value {
             font-size: 2.5rem;
             font-weight: 900;
@@ -922,6 +970,10 @@
                 grid-template-columns: 1fr;
             }
 
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+
             .overview-grid {
                 grid-template-columns: 1fr;
             }
@@ -960,6 +1012,7 @@
             <ul class="nav-links" id="navLinks">
                 <a href="#home">Home</a>
                 <a href="#about">About</a>
+                <a href="#team">Team</a>
                 <a href="#overview">Overview</a>
                 <a href="#hardware">Hardware</a>
                 <a href="#software">Software</a>
@@ -1072,8 +1125,8 @@
                 <span class="dot"></span>
                 Automated PCB Production Line
             </div>
-            <h1>Automated <span>PCB Chemical Etching</span> Production Line</h1>
-            <p class="subtitle">A Fully Automated System for High-Precision PCB Manufacturing Using Arduino UNO, GRBL, and CNC Technology</p>
+            <h1><span>PCB</span> Production Line</h1>
+            <p class="subtitle">Automated PCB Chemical Etching System — High-Precision Manufacturing Using Arduino UNO, GRBL, and CNC Technology</p>
             <p class="chapter-info">Chapter 6 — Software Implementation | Graduation Project</p>
             <div class="tech-stack">
                 <span>Arduino UNO</span>
@@ -1129,6 +1182,105 @@
                         Scalable Design
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TEAM ===== -->
+    <section id="team">
+        <h2 class="section-title">Team Members</h2>
+        <div class="section-title-underline"></div>
+        <p class="section-subtitle">The dedicated team behind the PCB Production Line graduation project.</p>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="t-icon">IM</div>
+                <h4>Ibrahim Musallam Ibrahim</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">AT</div>
+                <h4>Ahmed Tharwat Mahmoud</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">AK</div>
+                <h4>Ahmed Khamis Thabit</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">AD</div>
+                <h4>Ahmed Diaa Mounir</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">AS</div>
+                <h4>Ahmed Abdel Shahed Ibrahim</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">AO</div>
+                <h4>Asmaa Osama Eid</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">GA</div>
+                <h4>Ganna Ahmed Wageh</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">RM</div>
+                <h4>Rozan Mahmoud Ahmed</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">AE</div>
+                <h4>Abdelrahman El Sayed Ahmed</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">AS</div>
+                <h4>Abdelrahman Saied Sayed</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">AS</div>
+                <h4>Abdul Rahman Sharif Farghal</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">AS</div>
+                <h4>Abdul Rahman Sabry Kamal</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">AK</div>
+                <h4>Abdel Fattah Khaled Abdel Fattah</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">MF</div>
+                <h4>Mohamed Ahmed Mohamed Farouk</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">MA</div>
+                <h4>Mohamed Ayman Mohamed</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">MR</div>
+                <h4>Mariam Rafat Abdullah</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">NM</div>
+                <h4>Nancy Medhat Mohamed</h4>
+                <p>Team Member</p>
+            </div>
+            <div class="team-card">
+                <div class="t-icon">YH</div>
+                <h4>Youssab Hani Helal</h4>
+                <p>Team Member</p>
             </div>
         </div>
     </section>
@@ -1461,7 +1613,7 @@
 
     <!-- ===== FOOTER ===== -->
     <footer>
-        <p>Automated PCB Chemical Etching Production Line &copy; 2026 &mdash; All rights reserved to the project team</p>
+        <p>PCB Production Line &copy; 2026 &mdash; All rights reserved to the project team</p>
     </footer>
 
     <script>
@@ -1499,7 +1651,7 @@
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.overview-card, .hardware-card, .result-card, .gallery-item, .workflow-step').forEach(el => {
+        document.querySelectorAll('.overview-card, .hardware-card, .result-card, .gallery-item, .workflow-step, .team-card').forEach(el => {
             el.classList.add('reveal');
             revealObserver.observe(el);
         });
