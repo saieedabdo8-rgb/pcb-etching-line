@@ -1907,95 +1907,26 @@
         });
 
         // ===== TEAM MEMBERS =====
-        const teamMembers = [
-            "Ibrahim Musallam Ibrahim",
-            "Ahmed Tharwat Mahmoud",
-            "Ahmed Khamis Thabit",
-            "Ahmed Diaa Mounir",
-            "Ahmed Abdel Shahed Ibrahim",
-            "Asmaa Osama Eid",
-            "Ganna Ahmed Wageh",
-            "Rozan Mahmoud Ahmed",
-            "Abdelrahman El Sayed Ahmed",
-            "Abdelrahman Saied Sayed",
-            "Abdul Rahman Sharif Farghal",
-            "Abdul Rahman Sabry Kamal",
-            "Abdel Fattah Khaled Abdel Fattah",
-            "Mohamed Ahmed Mohamed Farouk",
-            "Mohamed Ayman Mohamed",
-            "Mariam Rafat Abdullah",
-            "Nancy Medhat Mohamed",
-            "Youssab Hani Helal",
-        ];
-
-        const teamImages = [
-            "Ebrahim Mesalm.jpeg",
-            "Ahmed Tharwat.jpeg",
-            "Ahmed Khamis.jpeg",
-            "Ahmed Diaa.jpeg",
-            "Ahmed abd elshahid Ebrahim.jpeg",
-            "Asmaa Osama.jpeg",
-            "Ganna Wageh Abo Seada.jpeg",
-            "Rozan Mahmoud.jpeg",
-            "Abdel-Rahman El-sayed.jpeg",
-            "Abdelrhman Saeed.jpeg",
-            "Abdelrahman Shreif.jpeg",
-            "Abdelrahman Sabry.jpeg",
-            "Abdelfattah khaled.jpeg",
-            "Mohamed Ahmed.jpeg",
-            "Mohamed Ayman.jpeg",
-            "Mariam rafat.jpeg",
-            "Nancy medhat.jpeg",
-            "YOUSAB HANY.jpeg",
-        ];
-
-        function wordMatchScore(a, b) {
-            if (a === b) return 3;
-            if (a.includes(b) || b.includes(a)) return 2;
-            let diffs = 0;
-            const len = Math.min(a.length, b.length);
-            for (let i = 0; i < len; i++) if (a[i] !== b[i]) diffs++;
-            if (diffs <= Math.floor(len / 3)) return 1;
-            return 0;
-        }
-
-        function normalizeName(str) {
-            return str.toLowerCase()
-                .replace(/[-_.]/g, ' ')
-                .replace(/[^a-z0-9\s]/g, '')
-                .replace(/\s+/g, ' ')
-                .trim()
-                .split(' ')
-                .filter(t => t.length > 1);
-        }
-
-        function matchScore(name, filename) {
-            const nw = normalizeName(name);
-            const fw = normalizeName(filename.replace(/\.\w+$/, ''));
-            let htmlMatched = 0, imgMatched = 0;
-            for (const a of nw) {
-                for (const b of fw) {
-                    if (wordMatchScore(a, b) > 0) { htmlMatched++; break; }
-                }
-            }
-            for (const b of fw) {
-                for (const a of nw) {
-                    if (wordMatchScore(a, b) > 0) { imgMatched++; break; }
-                }
-            }
-            const htmlRatio = htmlMatched / nw.length;
-            const imgRatio = imgMatched / fw.length;
-            return (htmlRatio + imgRatio) / 2;
-        }
-
-        function findBestMatch(name, images) {
-            let best = null, bestScore = 0;
-            for (const img of images) {
-                const s = matchScore(name, img);
-                if (s > bestScore) { bestScore = s; best = img; }
-            }
-            return bestScore >= 0.3 ? best : null;
-        }
+        const nameToImage = {
+            "Ibrahim Musallam Ibrahim": "Ebrahim Mesalm.jpeg",
+            "Ahmed Tharwat Mahmoud": "Ahmed Tharwat.jpeg",
+            "Ahmed Khamis Thabit": "Ahmed Khamis.jpeg",
+            "Ahmed Diaa Mounir": "Ahmed Diaa.jpeg",
+            "Ahmed Abdel Shahed Ibrahim": "Ahmed abd elshahid Ebrahim.jpeg",
+            "Asmaa Osama Eid": "Asmaa Osama.jpeg",
+            "Ganna Ahmed Wageh": "Ganna Wageh Abo Seada.jpeg",
+            "Rozan Mahmoud Ahmed": "Rozan Mahmoud.jpeg",
+            "Abdelrahman El Sayed Ahmed": "Abdel-Rahman El-sayed.jpeg",
+            "Abdelrahman Saied Sayed": "Abdelrhman Saeed.jpeg",
+            "Abdul Rahman Sharif Farghal": "Abdelrahman Shreif.jpeg",
+            "Abdul Rahman Sabry Kamal": "Abdelrahman Sabry.jpeg",
+            "Abdel Fattah Khaled Abdel Fattah": "Abdelfattah khaled.jpeg",
+            "Mohamed Ahmed Mohamed Farouk": "Mohamed Ahmed.jpeg",
+            "Mohamed Ayman Mohamed": "Mohamed Ayman.jpeg",
+            "Mariam Rafat Abdullah": "Mariam rafat.jpeg",
+            "Nancy Medhat Mohamed": "Nancy medhat.jpeg",
+            "Youssab Hani Helal": "YOUSAB HANY.jpeg",
+        };
 
         function getDisplayName(filename) {
             return filename.replace(/\.\w+$/, '');
@@ -2003,22 +1934,40 @@
 
         function buildTeam() {
             const grid = document.getElementById('teamGrid');
-            let usedImages = [];
+            const order = [
+                "Abdelrahman Saied Sayed",
+                "Rozan Mahmoud Ahmed",
+                "Ibrahim Musallam Ibrahim",
+                "Ahmed Tharwat Mahmoud",
+                "Ahmed Khamis Thabit",
+                "Ahmed Diaa Mounir",
+                "Ahmed Abdel Shahed Ibrahim",
+                "Asmaa Osama Eid",
+                "Ganna Ahmed Wageh",
+                "Abdelrahman El Sayed Ahmed",
+                "Abdul Rahman Sharif Farghal",
+                "Abdul Rahman Sabry Kamal",
+                "Abdel Fattah Khaled Abdel Fattah",
+                "Mohamed Ahmed Mohamed Farouk",
+                "Mohamed Ayman Mohamed",
+                "Mariam Rafat Abdullah",
+                "Nancy Medhat Mohamed",
+                "Youssab Hani Helal",
+            ];
 
-            for (const member of teamMembers) {
-                const match = findBestMatch(member, teamImages.filter(i => !usedImages.includes(i)));
+            for (const member of order) {
+                const imgFile = nameToImage[member];
                 const card = document.createElement('div');
                 card.className = 'team-card';
 
                 const avatarDiv = document.createElement('div');
                 avatarDiv.className = 't-avatar';
 
-                if (match) {
-                    usedImages.push(match);
+                if (imgFile) {
                     const img = document.createElement('img');
                     img.className = 't-img';
-                    img.src = 'team/' + match;
-                    img.alt = getDisplayName(match);
+                    img.src = 'team/' + imgFile;
+                    img.alt = getDisplayName(imgFile);
                     avatarDiv.appendChild(img);
                 } else {
                     const icon = document.createElement('div');
@@ -2028,7 +1977,7 @@
                 }
 
                 const nameEl = document.createElement('h4');
-                nameEl.textContent = match ? getDisplayName(match) : member;
+                nameEl.textContent = imgFile ? getDisplayName(imgFile) : member;
 
                 const roleEl = document.createElement('p');
                 roleEl.textContent = 'Team Member';
