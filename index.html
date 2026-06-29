@@ -714,10 +714,16 @@
             box-shadow: 0 12px 40px rgba(6, 182, 212, 0.1);
         }
 
-        .team-card .t-icon {
+        .team-card .t-avatar {
             width: 52px;
             height: 52px;
             margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .team-card .t-avatar .t-icon {
+            width: 100%;
+            height: 100%;
             background: linear-gradient(135deg, #06b6d4, #38bdf8);
             border-radius: 50%;
             display: flex;
@@ -726,6 +732,14 @@
             font-size: 1rem;
             font-weight: 800;
             color: #fff;
+        }
+
+        .team-card .t-avatar .t-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
         }
 
         .team-card h4 {
@@ -1394,97 +1408,7 @@
         <h2 class="section-title">Team Members</h2>
         <div class="section-title-underline"></div>
         <p class="section-subtitle">The dedicated team behind the PCB Production Line graduation project.</p>
-        <div class="team-grid">
-            <div class="team-card">
-                <div class="t-icon">IM</div>
-                <h4>Ibrahim Musallam Ibrahim</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">AT</div>
-                <h4>Ahmed Tharwat Mahmoud</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">AK</div>
-                <h4>Ahmed Khamis Thabit</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">AD</div>
-                <h4>Ahmed Diaa Mounir</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">AS</div>
-                <h4>Ahmed Abdel Shahed Ibrahim</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">AO</div>
-                <h4>Asmaa Osama Eid</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">GA</div>
-                <h4>Ganna Ahmed Wageh</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">RM</div>
-                <h4>Rozan Mahmoud Ahmed</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">AE</div>
-                <h4>Abdelrahman El Sayed Ahmed</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">AS</div>
-                <h4>Abdelrahman Saied Sayed</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">AS</div>
-                <h4>Abdul Rahman Sharif Farghal</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">AS</div>
-                <h4>Abdul Rahman Sabry Kamal</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">AK</div>
-                <h4>Abdel Fattah Khaled Abdel Fattah</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">MF</div>
-                <h4>Mohamed Ahmed Mohamed Farouk</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">MA</div>
-                <h4>Mohamed Ayman Mohamed</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">MR</div>
-                <h4>Mariam Rafat Abdullah</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">NM</div>
-                <h4>Nancy Medhat Mohamed</h4>
-                <p>Team Member</p>
-            </div>
-            <div class="team-card">
-                <div class="t-icon">YH</div>
-                <h4>Youssab Hani Helal</h4>
-                <p>Team Member</p>
-            </div>
+        <div class="team-grid" id="teamGrid">
         </div>
     </section>
 
@@ -1914,8 +1838,6 @@
         });
 
         // ===== SCROLL REVEAL =====
-        const revealElements = document.querySelectorAll('.overview-card, .hardware-card, .result-card, .gallery-item, .workflow-step, .about-grid');
-
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1924,7 +1846,7 @@
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.overview-card, .hardware-card, .result-card, .gallery-item, .workflow-step, .team-card').forEach(el => {
+        document.querySelectorAll('.overview-card, .hardware-card, .result-card, .gallery-item, .workflow-step').forEach(el => {
             el.classList.add('reveal');
             revealObserver.observe(el);
         });
@@ -1983,6 +1905,145 @@
                 }
             });
         });
+
+        // ===== TEAM MEMBERS =====
+        const teamMembers = [
+            "Ibrahim Musallam Ibrahim",
+            "Ahmed Tharwat Mahmoud",
+            "Ahmed Khamis Thabit",
+            "Ahmed Diaa Mounir",
+            "Ahmed Abdel Shahed Ibrahim",
+            "Asmaa Osama Eid",
+            "Ganna Ahmed Wageh",
+            "Rozan Mahmoud Ahmed",
+            "Abdelrahman El Sayed Ahmed",
+            "Abdelrahman Saied Sayed",
+            "Abdul Rahman Sharif Farghal",
+            "Abdul Rahman Sabry Kamal",
+            "Abdel Fattah Khaled Abdel Fattah",
+            "Mohamed Ahmed Mohamed Farouk",
+            "Mohamed Ayman Mohamed",
+            "Mariam Rafat Abdullah",
+            "Nancy Medhat Mohamed",
+            "Youssab Hani Helal",
+        ];
+
+        const teamImages = [
+            "Ebrahim Mesalm.jpeg",
+            "Ahmed Tharwat.jpeg",
+            "Ahmed Khamis.jpeg",
+            "Ahmed Diaa.jpeg",
+            "Ahmed abd elshahid Ebrahim.jpeg",
+            "Asmaa Osama.jpeg",
+            "Ganna Wageh Abo Seada.jpeg",
+            "Rozan Mahmoud.jpeg",
+            "Abdel-Rahman El-sayed.jpeg",
+            "Abdelrhman Saeed.jpeg",
+            "Abdelrahman Shreif.jpeg",
+            "Abdelrahman Sabry.jpeg",
+            "Abdelfattah khaled.jpeg",
+            "Mohamed Ahmed.jpeg",
+            "Mohamed Ayman.jpeg",
+            "Mariam rafat.jpeg",
+            "Nancy medhat.jpeg",
+            "YOUSAB HANY.jpeg",
+        ];
+
+        function wordMatchScore(a, b) {
+            if (a === b) return 3;
+            if (a.includes(b) || b.includes(a)) return 2;
+            let diffs = 0;
+            const len = Math.min(a.length, b.length);
+            for (let i = 0; i < len; i++) if (a[i] !== b[i]) diffs++;
+            if (diffs <= Math.floor(len / 3)) return 1;
+            return 0;
+        }
+
+        function normalizeName(str) {
+            return str.toLowerCase()
+                .replace(/[-_.]/g, ' ')
+                .replace(/[^a-z0-9\s]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .split(' ')
+                .filter(t => t.length > 1);
+        }
+
+        function matchScore(name, filename) {
+            const nw = normalizeName(name);
+            const fw = normalizeName(filename.replace(/\.\w+$/, ''));
+            let htmlMatched = 0, imgMatched = 0;
+            for (const a of nw) {
+                for (const b of fw) {
+                    if (wordMatchScore(a, b) > 0) { htmlMatched++; break; }
+                }
+            }
+            for (const b of fw) {
+                for (const a of nw) {
+                    if (wordMatchScore(a, b) > 0) { imgMatched++; break; }
+                }
+            }
+            const htmlRatio = htmlMatched / nw.length;
+            const imgRatio = imgMatched / fw.length;
+            return (htmlRatio + imgRatio) / 2;
+        }
+
+        function findBestMatch(name, images) {
+            let best = null, bestScore = 0;
+            for (const img of images) {
+                const s = matchScore(name, img);
+                if (s > bestScore) { bestScore = s; best = img; }
+            }
+            return bestScore >= 0.3 ? best : null;
+        }
+
+        function getDisplayName(filename) {
+            return filename.replace(/\.\w+$/, '');
+        }
+
+        function buildTeam() {
+            const grid = document.getElementById('teamGrid');
+            let usedImages = [];
+
+            for (const member of teamMembers) {
+                const match = findBestMatch(member, teamImages.filter(i => !usedImages.includes(i)));
+                const card = document.createElement('div');
+                card.className = 'team-card';
+
+                const avatarDiv = document.createElement('div');
+                avatarDiv.className = 't-avatar';
+
+                if (match) {
+                    usedImages.push(match);
+                    const img = document.createElement('img');
+                    img.className = 't-img';
+                    img.src = 'team/' + match;
+                    img.alt = getDisplayName(match);
+                    avatarDiv.appendChild(img);
+                } else {
+                    const icon = document.createElement('div');
+                    icon.className = 't-icon';
+                    icon.textContent = member.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+                    avatarDiv.appendChild(icon);
+                }
+
+                const nameEl = document.createElement('h4');
+                nameEl.textContent = match ? getDisplayName(match) : member;
+
+                const roleEl = document.createElement('p');
+                roleEl.textContent = 'Team Member';
+
+                card.appendChild(avatarDiv);
+                card.appendChild(nameEl);
+                card.appendChild(roleEl);
+                grid.appendChild(card);
+
+                card.classList.add('reveal');
+                revealObserver.observe(card);
+            }
+        }
+
+        buildTeam();
 
         console.log('PCB Production Line - Website Loaded');
     </script>
