@@ -1077,9 +1077,9 @@
             color: #7dd3fc;
         }
 
-        .visitor-count .count-num {
-            font-weight: 700;
-            color: #06b6d4;
+        .visitor-count img {
+            height: 20px;
+            border-radius: 4px;
         }
 
         /* ===== LIGHTBOX ===== */
@@ -1857,7 +1857,8 @@
     <footer>
         <p>PCB Production Line &copy; 2026 &mdash; All rights reserved to the project team</p>
         <div class="visitor-count">
-            &#128065; Visitors: <span class="count-num" id="visitorCount">0</span>
+            <span>&#128065; Visitors:</span>
+            <img src="https://visitor-badge.laobi.icu/badge?page_id=saieedabdo8-rgb.pcb-etching-line" alt="Visitor Count" style="height:20px;border-radius:4px;">
         </div>
     </footer>
 
@@ -2087,11 +2088,7 @@
 
         buildTeam();
 
-        // ===== VISITOR COUNTER =====
-        fetch('https://api.countapi.xyz/hit/saieedabdo8-rgb/pcb-etching-line')
-            .then(r => r.json())
-            .then(d => document.getElementById('visitorCount').textContent = d.value.toLocaleString())
-            .catch(() => document.getElementById('visitorCount').textContent = '—');
+
 
         console.log('PCB Production Line - Website Loaded');
     </script>
